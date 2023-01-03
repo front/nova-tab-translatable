@@ -22,9 +22,9 @@
         <div class="tab-contents">
             <div class="tab-content"
                  v-for="(component, index) in field.fields"
-                 v-show="selectedLang === component.locale && checkVisibility(component)"
                  :data-lang="component.locale">
                 <component
+                    v-if="selectedLang === component.locale && checkVisibility(component)"
                     :key="index"
                     :class="{'remove-bottom-border ': (index + 1) % field.originalFieldsCount !== 0}"
                     :is="resolveComponentName(component)"
