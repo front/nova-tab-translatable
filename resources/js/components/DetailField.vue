@@ -1,33 +1,19 @@
 <template>
     <div id="nova-tab-translatable" class="details w-full">
-        <div class="tab-items px-8" ref="tabItems">
-            <span class="tab-item"
-                  v-for="lang in lineMenu"
-                  ref="tabItem"
+        <select-nova-tab-translatable v-if="isSelect()"
+                                      :options="field.languages"
+                                      :value="selectedLang"
+                                      @input="switchLanguage">
+        </select-nova-tab-translatable>
+
+        <div v-if="!isSelect()" class="tab-items px-8">
+            <span class="tab-item" v-for="lang in field.languages"
                   :data-langfor="lang"
-                  :class="{'active':selectedLang === lang}"
-                  @click="switchLanguage(lang)"
-            >
+                  :class="{'active':selectedLang === lang}" @click="switchLanguage(lang)">
                 {{ lang }}
             </span>
-
-            <div id="hamburger-menu" v-show="hamburgerMenu.length">
-                <div class="hamburger-icon" @click="menuIsOpen = !menuIsOpen" :data-hiddencount="hamburgerMenu.length" :class="{'fs14':hamburgerMenu.length < 100}">
-                    <span></span>
-                </div>
-                <div class="hamburger-content tab-items" v-show="menuIsOpen">
-                    <span class="tab-item"
-                          v-for="lang in reversedHamburgerMenu"
-                          ref="tabItem"
-                          :data-langfor="lang"
-                          :class="{'active':selectedLang === lang}"
-                          @click="switchLanguage(lang)"
-                    >
-                        {{ lang }}
-                    </span>
-                </div>
-            </div>
         </div>
+
         <div class="tab-contents">
             <div v-for="(component, index) in field.fields"
                  v-show="selectedLang === component.locale && component.showOnDetail"

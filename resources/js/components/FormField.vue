@@ -1,9 +1,15 @@
 <template>
     <div id="nova-tab-translatable" class="w-full">
-        <div class="tab-items px-8" ref="tabItems">
+        <select-nova-tab-translatable v-if="isSelect()"
+                        :options="field.languages"
+                        :classNames="{'has-error': checkError(selectedLang)}"
+                        :value="selectedLang"
+                        :input="switchLanguage">
+        </select-nova-tab-translatable>
+
+        <div v-if="!isSelect()" class="tab-items px-8">
             <span class="tab-item"
-                  v-for="lang in lineMenu"
-                  ref="tabItem"
+                  v-for="lang in field.languages"
                   :data-langfor="lang"
                   :class="{'active':selectedLang === lang, 'has-error':checkError(lang)}"
                   @click="switchLanguage(lang)"
@@ -11,25 +17,8 @@
                 {{ lang }}
                 <span class="text-danger text-sm">{{ field.requiredLocales[lang] !== undefined && field.requiredLocales[lang] == true ? '*' : '' }}</span>
             </span>
-
-            <div id="hamburger-menu" v-show="hamburgerMenu.length">
-                <div class="hamburger-icon" @click="menuIsOpen = !menuIsOpen" :data-hiddencount="hamburgerMenu.length" :class="{'fs14':hamburgerMenu.length < 100}">
-                    <span></span>
-                </div>
-                <div class="hamburger-content tab-items" v-show="menuIsOpen">
-                    <span class="tab-item"
-                          v-for="lang in reversedHamburgerMenu"
-                          ref="tabItem"
-                          :data-langfor="lang"
-                          :class="{'active':selectedLang === lang, 'has-error':checkError(lang)}"
-                          @click="switchLanguage(lang)"
-                    >
-                        {{ lang }}
-                        <span class="text-danger text-sm">{{ field.requiredLocales[lang] !== undefined && field.requiredLocales[lang] == true ? '*' : '' }}</span>
-                    </span>
-                </div>
-            </div>
         </div>
+
         <div class="tab-contents">
             <div class="tab-content"
                  v-for="(component, index) in field.fields"
@@ -55,8 +44,8 @@
 </template>
 
 <script>
-import {FormField, HandlesValidationErrors} from 'laravel-nova';
 import IndexMixin from '../mixins/index'
+import {FormField, HandlesValidationErrors} from 'laravel-nova';
 
 export default {
     mixins: [FormField, HandlesValidationErrors, IndexMixin],

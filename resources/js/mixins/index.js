@@ -2,60 +2,14 @@ export default {
     data() {
         return {
             selectedLang: '',
-
-            menuIsOpen:false,
-            totalSpace: 0,
-            lineMenu: [],
-            hamburgerMenu: [],
-            breakWidths: [],
         }
     },
     mounted() {
         this.selectedLang = this.getSelectedLang();
-        this.lineMenu = this.field.languages;
-
-        window.addEventListener("resize", this.calculateMenu);
-
-        this.$nextTick(() => {
-            this.$refs.tabItem.forEach(col => {
-                this.totalSpace += col.clientWidth;
-                this.breakWidths.push(this.totalSpace);
-            })
-
-            this.calculateMenu();
-        })
-    },
-    destroyed() {
-        window.removeEventListener("resize", this.calculateMenu);
-    },
-    computed: {
-        reversedHamburgerMenu(){
-            return this.hamburgerMenu.slice().reverse();
-        }
     },
     methods: {
-        calculateMenu(){
-            let tabItems = this.$refs.tabItems;
-            let availableSpace = tabItems.clientWidth - ( 24 * 2 ) - 40; // 24*2=padding, 15=?, 40=hamburgerMenu
-            let numOfVisibleItems = this.lineMenu.length;
-            let requiredSpace = this.breakWidths[numOfVisibleItems - 1];
-
-            if (requiredSpace > availableSpace) {
-                this.hamburgerMenu.push(this.lineMenu[this.lineMenu.length - 1]);
-                this.lineMenu.pop();
-                numOfVisibleItems -= 1;
-                this.calculateMenu();
-                // There is more than enough space
-            } else if (availableSpace > this.breakWidths[numOfVisibleItems]) {
-                this.lineMenu.push(this.hamburgerMenu[this.hamburgerMenu.length - 1]);
-                this.hamburgerMenu.pop();
-                numOfVisibleItems += 1;
-                this.calculateMenu();
-            }
-        },
         switchLanguage(lang){
             this.selectedLang = lang;
-            this.menuIsOpen = false;
 
             localStorage.setItem(this.getStorageName()+'lastSelectedLang', lang);
         },
@@ -74,6 +28,20 @@ export default {
         },
         componentName(component){
             return component.name.replace(' ['+component.locale+']', '');
+        },
+        isMobile() {
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        isSelect() {
+            if(this.field.layout === 'select' || this.isMobile()) {
+                return true;
+            }
+
+            return false;
         }
     },
 };
