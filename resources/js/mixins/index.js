@@ -2,6 +2,7 @@ export default {
     data() {
         return {
             selectedLang: '',
+            languages: Object.values(this.field.languages) || [],
         }
     },
     mounted() {
@@ -17,11 +18,11 @@ export default {
             if(this.field.saveLastSelectedLang){
                 let lastSelectedLang = localStorage.getItem(this.getStorageName()+'lastSelectedLang');
 
-                if (lastSelectedLang && this.field.languages.includes(lastSelectedLang))
+                if (lastSelectedLang && this.languages.includes(lastSelectedLang))
                     return lastSelectedLang;
             }
 
-            return this.field.languages[0] ? this.field.languages[0] : '';
+            return this.languages[0] ? this.languages[0] : '';
         },
         getStorageName(){
             return 'kongulov/nova-tab-translatable:';

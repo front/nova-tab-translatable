@@ -9,22 +9,23 @@
 
         <div v-if="!isSelect()" class="tab-items px-8">
             <span class="tab-item"
-                  v-for="lang in field.languages"
-                  :data-langfor="lang"
-                  :class="{'active':selectedLang === lang, 'has-error':checkError(lang)}"
-                  @click="switchLanguage(lang)"
+                  v-for="(langCode, lang) in field.languages"
+                  :data-langfor="langCode"
+                  :class="{'active':selectedLang === langCode, 'has-error':checkError(langCode)}"
+                  @click="switchLanguage(langCode)"
             >
                 {{ lang }}
-                <span class="text-danger text-sm">{{ field.requiredLocales[lang] !== undefined && field.requiredLocales[lang] == true ? '*' : '' }}</span>
+                <span class="text-danger text-sm">{{ field.requiredLocales[langCode] !== undefined && field.requiredLocales[langCode] == true ? '*' : '' }}</span>
             </span>
         </div>
 
-        <div class="tab-contents">
+        <div class="tab-contents"  v-if="selectedLang !== ''">
             <div class="tab-content"
                  v-for="(component, index) in field.fields"
-                 :data-lang="component.locale">
+                 v-show="selectedLang === component.locale && checkVisibility(component)"
+                 :data-lang="component.locale"
+            >
                 <component
-                    v-if="selectedLang === component.locale && checkVisibility(component)"
                     :key="index"
                     :class="{'remove-bottom-border ': (index + 1) % field.originalFieldsCount !== 0}"
                     :is="resolveComponentName(component)"
@@ -36,6 +37,7 @@
                     :via-resource="viaResource"
                     :via-resource-id="viaResourceId"
                     :via-relationship="viaRelationship"
+                    :selected-lang="selectedLang"
                     @file-deleted="file-deleted"
                 />
             </div>

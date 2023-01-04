@@ -1,12 +1,16 @@
 <template>
     <div class='flex flex-col md:flex-row'>
         <div class="px-6 md:px-8 mt-2 md:mt-0 pb-5 w-full md:w-4/5 md:py-5">
-            <div class="relative w-full">
+            <span>Select content language:</span>
+            <div class="relative w-full mt-2">
                 <v-select
-                    :options="options"
+                    :options="mappedOptions"
                     :class="{'form-control form-select form-select-bordered': true, classNames}"
                     :modelValue="value"
-                    @update:modelValue="input"></v-select>
+                    :reduce="option => option.code"
+                    @update:modelValue="input"
+                    :clearable="false"
+                ></v-select>
             </div>
         </div>
     </div>
@@ -17,8 +21,12 @@
 import 'vue-select/dist/vue-select.css';
 
 export default {
-
     props: ['options', 'classNames', 'value', 'input'],
+    data() {
+        return {
+            mappedOptions: Object.entries(this.options)?.map(([key, value]) => ({label: key, code: value})) || []
+        }
+    }
 
 }
 
