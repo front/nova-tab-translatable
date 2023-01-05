@@ -83,6 +83,7 @@ export default {
             })
         },
         handleChange(value) {
+            console.log(handleChange, value)
             this.value = value
         },
         resolveComponentName(field) {
