@@ -4,7 +4,8 @@
                         :options="field.languages"
                         :classNames="{'has-error': checkError(selectedLang)}"
                         :value="selectedLang"
-                        :input="switchLanguage">
+                        :input="switchLanguage"
+                        :requiredLanguages="field.requiredLocales">
         </select-nova-tab-translatable>
 
         <div v-if="!isSelect()" class="tab-items px-8">
@@ -83,7 +84,6 @@ export default {
             })
         },
         handleChange(value) {
-            console.log(handleChange, value)
             this.value = value
         },
         resolveComponentName(field) {
@@ -91,7 +91,7 @@ export default {
         },
         switchToErrorTab() {
             Object.keys(this.errors.errors).find((key) => {
-                let lang = key.substr(key.length - 2);
+                let lang = key.split("_").pop();
                 if (Object.keys(this.field.requiredLocales).includes(lang)) {
                     this.selectedLang = lang;
                     return true;
@@ -100,7 +100,7 @@ export default {
         },
         checkError(lang) {
             for (var key in this.errors.errors) {
-                if (key.substr(key.length - 2) === lang) {
+                if (key.split("_").pop() === lang) {
                     return true;
                 }
             }

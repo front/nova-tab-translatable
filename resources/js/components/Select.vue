@@ -5,7 +5,7 @@
             <div class="relative w-full mt-2">
                 <v-select
                     :options="mappedOptions"
-                    :class="{'form-control form-select form-select-bordered': true, classNames}"
+                    :class="['form-control form-select form-select-bordered', classNames]"
                     :modelValue="value"
                     :reduce="option => option.code"
                     @update:modelValue="input"
@@ -21,10 +21,13 @@
 import 'vue-select/dist/vue-select.css';
 
 export default {
-    props: ['options', 'classNames', 'value', 'input'],
+    props: ['options', 'classNames', 'value', 'input', 'requiredLanguages'],
     data() {
         return {
-            mappedOptions: Object.entries(this.options)?.map(([key, value]) => ({label: key, code: value})) || []
+            mappedOptions: Object.entries(this.options)?.map(([key, value]) => {
+                const label = (this.requiredLanguages && this.requiredLanguages[value] !== undefined && this.requiredLanguages[value] == true) ? key + ' *' : key;
+                return ({label: label, code: value})
+            } ) || []
         }
     }
 

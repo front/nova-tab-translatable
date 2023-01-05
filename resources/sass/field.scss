@@ -43,6 +43,12 @@
             }
         }
     }
+
+    .v-select {
+        &.has-error {
+            border-color: #ef4444;
+        }
+    }
 }
 
 [data-testid="preview-resource-modal"],
